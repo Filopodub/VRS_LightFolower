@@ -29,14 +29,33 @@ Kód je rozdelený do samostatných modulov:
 ---
 
 ## 🔌 Zapojenie (I²C)
-| VEML7700 | STM32 |
-|--------|-------|
-| VCC    | 3.3 V |
-| GND    | GND   |
-| SCL    | PB6   |
-| SDA    | PB7   |
+
+## 🔌 Zapojenie (I²C) – dva senzory
+
+| VEML7700 #1 | STM32 |
+|------------|-------|
+| VCC        | 3.3 V |
+| GND        | GND   |
+| SCL        | PB6   |
+| SDA        | PB7   |
+| ADDR       | GND   |
+
+| VEML7700 #2 | STM32 |
+|------------|-------|
+| VCC        | 3.3 V |
+| GND        | GND   |
+| SCL        | PB6   |
+| SDA        | PB7   |
+| ADDR       | VCC   |
 
 > I²C piny sú nakonfigurované ako **AF Open-Drain s Pull-Up**.
+
+
+> I²C piny sú nakonfigurované ako **AF Open-Drain s Pull-Up**.
+
+### 📐 Schematický diagram
+
+![Circuit Diagram](circuit_image.svg)
 
 ---
 
@@ -50,17 +69,17 @@ Kód je rozdelený do samostatných modulov:
 ---
 
 ## 📁 Štruktúra projektu
-Core/
-├── Src/
-│ ├── main.c
-│ ├── i2c.c
-│ ├── gpio.c
-│ └── veml.c
-└── Inc/
-├── i2c.h
-├── gpio.h
-└── veml.h
-LightFolower.ioc
+Core/\
+├── Src/\
+│ ├── main.c\
+│ ├── i2c.c\
+│ ├── gpio.c\
+│ └── veml.c\
+└── Inc/\
+├── i2c.h\
+├── gpio.h\
+└── veml.h\
+LightFolower.ioc\
 README.md
 ---
 
