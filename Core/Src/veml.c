@@ -2,20 +2,21 @@
 #include "i2c.h"
 #include "main.h"
 
+/* Initialize VEML7700 sensor */
 void VEML_Init(void)
 {
-    uint8_t buf[3];
+    uint8_t buf[2];
 
     /* ALS_CONF register (0x00)
      * Gain 1x
-     * IT 100ms
+     * Integration Time 100ms
      * Shutdown = 0
      */
-    buf[0] = VEML_REG_ALS_CONF;
-    buf[1] = 0x00;   // LSB
-    buf[2] = 0x00;   // MSB
+    buf[0] = 0x00; // LSB
+    buf[1] = 0x00; // MSB
 
-    if (HAL_I2C_Master_Transmit(&hi2c1, VEML7700_ADDR, buf, 3, HAL_MAX_DELAY) != HAL_OK)
+    if (HAL_I2C_Mem_Write(&hi2c1, VEML7700_ADDR, VEML_REG_ALS_CONF,
+                          I2C_MEMADD_SIZE_8BIT, buf, 2, HAL_MAX_DELAY) != HAL_OK)
     {
         Error_Handler();
     }
@@ -23,24 +24,37 @@ void VEML_Init(void)
     HAL_Delay(100); // wait for first conversion
 }
 
+/* Read raw ALS value */
 uint16_t VEML_ReadRaw(void)
 {
-    uint8_t reg = VEML_REG_ALS_DATA;
     uint8_t data[2];
 
-    if (HAL_I2C_Master_Transmit(&hi2c1, VEML7700_ADDR, &reg, 1, HAL_MAX_DELAY) != HAL_OK)
+    if (HAL_I2C_Mem_Read(&hi2c1, VEML7700_ADDR, VEML_REG_ALS_DATA,
+                         I2C_MEMADD_SIZE_8BIT, data, 2, HAL_MAX_DELAY) != HAL_OK)
+    {
         Error_Handler();
-
-    if (HAL_I2C_Master_Receive(&hi2c1, VEML7700_ADDR, data, 2, HAL_MAX_DELAY) != HAL_OK)
-        Error_Handler();
+    }
 
     return (data[1] << 8) | data[0];
 }
 
+/* Convert raw value to lux */
 float VEML_ReadLux(void)
 {
     uint16_t raw = VEML_ReadRaw();
+    return raw * 0.0576f; // gain 1x, IT 100ms
+}
 
-    /* Datasheet: 0.0576 lux per count (Gain 1x, IT 100ms) */
-    return raw * 0.0576f;
+/* Read device ID */
+uint16_t VEML_ReadID(void)
+{
+    uint8_t data[2];
+
+    if (HAL_I2C_Mem_Read(&hi2c1, VEML7700_ADDR, 0x07,
+                         I2C_MEMADD_SIZE_8BIT, data, 2, HAL_MAX_DELAY) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+    return (data[1] << 8) | data[0];
 }

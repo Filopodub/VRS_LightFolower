@@ -18,25 +18,12 @@ int main(void)
 
   MX_GPIO_Init();
   MX_I2C1_Init();
-  uint8_t dummy = 0x00;
-
-  HAL_StatusTypeDef res =
-      HAL_I2C_Master_Transmit(&hi2c1, 0x20, &dummy, 1, 100);
-
-  if (res == HAL_OK)
-  {
-      // 🎉 I2C OK
-  }
-  else
-  {
-      // ❌ sem sa už NESMIE dostať
-      while(1);
-  }
-
   VEML_Init();
 
   volatile uint16_t raw = 0;
   volatile float lux = 0;
+  volatile uint16_t id = VEML_ReadID();
+
 
   while(1)
   {
