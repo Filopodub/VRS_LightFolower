@@ -1,0 +1,27 @@
+# STM32CubeIDE
+Debug/
+Release/
+.build/
+.settings/
+
+# CubeMX
+*.mxproject
+*.ioc.bak
+
+# Toolchain
+*.o
+*.d
+*.elf
+*.map
+*.list
+*.su
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+
+# Logs
+*.log
