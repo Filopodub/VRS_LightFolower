@@ -1,0 +1,4 @@
+../Core/Src/veml.c:7:6:VEML_Init	2
+../Core/Src/veml.c:20:10:VEML_ReadRaw	2
+../Core/Src/veml.c:33:7:VEML_ReadLux	1
+../Core/Src/veml.c:38:10:VEML_ReadID	2

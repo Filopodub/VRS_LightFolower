@@ -1,0 +1,4 @@
+../Core/Src/veml.c:7:6:VEML_Init	40	static
+../Core/Src/veml.c:20:10:VEML_ReadRaw	40	static
+../Core/Src/veml.c:33:7:VEML_ReadLux	16	static
+../Core/Src/veml.c:38:10:VEML_ReadID	40	static
