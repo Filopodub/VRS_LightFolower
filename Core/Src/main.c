@@ -16,28 +16,28 @@ int main(void)
 
   MX_GPIO_Init();
   MX_I2C1_Init();
-//  MX_I2C2_Init();
+  MX_I2C2_Init();
 
   HAL_Delay(100);
 
   /* Initialize both sensors */
   VEML_Init(&hi2c1, VEML_ADDR);
-//  VEML_Init(&hi2c2, VEML_ADDR);
+  VEML_Init(&hi2c2, VEML_ADDR);
 
   HAL_Delay(10);
 
   volatile uint16_t raw1 = 0, raw2 = 0;
   volatile float lux1 = 0, lux2 = 0;
   volatile uint16_t id1 = VEML_ReadID(&hi2c1, VEML_ADDR);
-//  volatile uint16_t id2 = VEML_ReadID(&hi2c2, VEML_ADDR);
+  volatile uint16_t id2 = VEML_ReadID(&hi2c2, VEML_ADDR);
 
   while (1)
   {
 	  raw1 = VEML_ReadRaw(&hi2c1, VEML_ADDR);
 	  lux1 = VEML_ReadLux(&hi2c1, VEML_ADDR);
 
-//	  raw2 = VEML_ReadRaw(&hi2c2, VEML_ADDR);
-//	  lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);
+	  raw2 = VEML_ReadRaw(&hi2c2, VEML_ADDR);
+	  lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);
 
 	  HAL_Delay(500);
   }

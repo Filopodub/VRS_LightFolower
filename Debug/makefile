@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := LightFolower2
+BUILD_ARTIFACT_NAME := LightFolower
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-LightFolower2.elf \
+LightFolower.elf \
 
 MAP_FILES += \
-LightFolower2.map \
+LightFolower.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-LightFolower2.list \
+LightFolower.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: LightFolower2.elf secondary-outputs
+main-build: LightFolower.elf secondary-outputs
 
 # Tool invocations
-LightFolower2.elf LightFolower2.map: $(OBJS) $(USER_OBJS) C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower2\STM32L152RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "LightFolower2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower2\STM32L152RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LightFolower2.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+LightFolower.elf LightFolower.map: $(OBJS) $(USER_OBJS) C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower\STM32L152RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "LightFolower.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower\STM32L152RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LightFolower.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-LightFolower2.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "LightFolower2.list"
+LightFolower.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "LightFolower.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) LightFolower2.elf LightFolower2.list LightFolower2.map default.size.stdout
+	-$(RM) LightFolower.elf LightFolower.list LightFolower.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
