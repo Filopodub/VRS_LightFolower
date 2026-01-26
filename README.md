@@ -1,9 +1,9 @@
 # 🌞 Light Sensor Project – STM32 + VEML7700
 
-Projekt demonštruje použitie digitálneho svetelného senzora **VEML7700** pripojeného
-cez **I²C** k mikrokontroléru **STM32F303K8 (NUCLEO-F303K8)**.
-Cieľom je inicializácia senzora, čítanie dát a výpočet intenzity osvetlenia v luxoch.
+### STM32 NUCLEO-L152RE + 2× VEML7700 (Dual I²C)
 
+Projekt demonštruje použitie **dvoch digitálnych svetelných senzorov VEML7700**, z ktorých každý je pripojený na **samostatnú I²C zbernicu** mikrokontroléra **STM32L152RE (NUCLEO-L152RE)**.  
+Na základe nameraných hodnôt systém riadi **krokový motor**, ktorý sa natáča smerom k najsilnejšiemu svetlu.
 ---
 
 ## ✨ Popis projektu
@@ -20,38 +20,42 @@ Kód je rozdelený do samostatných modulov:
 ---
 
 ## 🔧 Použité komponenty
-- STM32 NUCLEO-F303K8
-- VEML7700 Ambient Light Sensor
-- I²C zbernica (SCL, SDA)
+- STM32 **NUCLEO-L152RE**
+- 2× **VEML7700 Ambient Light Sensor**    
+- 2× I²C zbernica (I²C1, I²C2)
 - 3.3 V napájanie
 - Prepojovacie káble
 
 ---
 
-## 🔌 Zapojenie (I²C)
+## 🔌 Zapojenie (Dual I²C)
 
-## 🔌 Zapojenie (I²C) – dva senzory
+### VEML7700 – ľavý senzor (I²C1)
 
-| VEML7700 #1 | STM32 |
-|------------|-------|
-| VCC        | 3.3 V |
-| GND        | GND   |
-| SCL        | PB6   |
-| SDA        | PB7   |
-| ADDR       | GND   |
+|VEML7700|STM32|
+|---|---|
+|VCC|3.3 V|
+|GND|GND|
+|SCL|PB6 (I²C1_SCL)|
+|SDA|PB7 (I²C1_SDA)|
+|ADDR|GND|
 
-| VEML7700 #2 | STM32 |
-|------------|-------|
-| VCC        | 3.3 V |
-| GND        | GND   |
-| SCL        | PB6   |
-| SDA        | PB7   |
-| ADDR       | VCC   |
+---
 
+### VEML7700 – pravý senzor (I²C2)
+
+|VEML7700|STM32|
+|---|---|
+|VCC|3.3 V|
+|GND|GND|
+|SCL|PB10 (I²C2_SCL)|
+|SDA|PB11 (I²C2_SDA)|
+|ADDR|GND|
+
+> Každý senzor má **vlastnú I²C zbernicu**, takže oba môžu používať rovnakú **7-bit adresu 0x10**.  
 > I²C piny sú nakonfigurované ako **AF Open-Drain s Pull-Up**.
 
-
-> I²C piny sú nakonfigurované ako **AF Open-Drain s Pull-Up**.
+---
 
 ### 📐 Schematický diagram
 
@@ -60,10 +64,12 @@ Kód je rozdelený do samostatných modulov:
 ---
 
 ## 🧠 Ako to funguje
-1. STM32 inicializuje I²C perifériu
-2. VEML7700 je nakonfigurovaný (Gain 1×, Integration Time 100 ms)
-3. Periodicky sa číta ALS register
-4. Raw hodnota sa konvertuje na lux podľa datasheetu
+1. STM32 inicializuje **I²C1 a I²C2**
+2. Oba senzory VEML7700 sú nakonfigurované (Gain 1×, Integration Time 100 ms)
+3. Periodicky sa čítajú ALS registre:
+    - ľavý senzor cez I²C1
+    - pravý senzor cez I²C2
+4. Raw hodnoty sa konvertujú na **lux**
 5. Hodnota môže byť ďalej použitá (napr. regulácia, rozhodovanie, logovanie)
 
 ---
@@ -75,10 +81,10 @@ Core/\
 │ ├── i2c.c\
 │ ├── gpio.c\
 │ └── veml.c\
-└── Inc/\
-├── i2c.h\
-├── gpio.h\
-└── veml.h\
+├── Inc/\
+  ├── i2c.h\
+  ├── gpio.h\
+  └── veml.h\
 LightFolower.ioc\
 README.md
 ---
@@ -87,17 +93,9 @@ README.md
 1. Otvor `LightFolower.ioc` v **STM32CubeIDE**
 2. Klikni **Generate Code**
 3. Build & Flash na NUCLEO dosku
-4. Sleduj hodnoty v debuggeri (premenná `lux`)
+4. Sleduj premenné `lux_left` a `lux_right` v debuggeri
 
 ---
 
-## ⚠️ Poznámky
-- VEML7700 používa **7-bit I²C adresu (0x10)**  
-- Pull-up rezistory sú povinné (interné alebo externé)
-- I²C Timing je generovaný pomocou CubeMX
 
----
-
-## 📜 Licencia
-Projekt je určený na študijné a vzdelávacie účely.
 
