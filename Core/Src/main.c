@@ -3,6 +3,7 @@
 #include "i2c.h"
 #include "gpio.h"
 #include "veml.h"
+#include "servo_PWM.h"
 
 #define VEML_ADDR   (0x10 << 1)
 
@@ -17,6 +18,9 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
+
+  /* Initialize Servo PWM */
+  Servo_Init();
 
   HAL_Delay(100);
 
@@ -38,6 +42,9 @@ int main(void)
 
 	  raw2 = VEML_ReadRaw(&hi2c2, VEML_ADDR);
 	  lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);
+
+	  Servo_StepForward();
+
 
 	  HAL_Delay(500);
   }

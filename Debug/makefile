@@ -60,8 +60,8 @@ all: main-build
 main-build: LightFolower.elf secondary-outputs
 
 # Tool invocations
-LightFolower.elf LightFolower.map: $(OBJS) $(USER_OBJS) C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower\STM32L152RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "LightFolower.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Filip\STM32CubeIDE\workspace_1.19.0\LightFolower\STM32L152RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LightFolower.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+LightFolower.elf LightFolower.map: $(OBJS) $(USER_OBJS) C:\Users\Be\ Alive\Desktop\VRS_semestralka\VRS_LightFolower\STM32L152RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "LightFolower.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Be Alive\Desktop\VRS_semestralka\VRS_LightFolower\STM32L152RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LightFolower.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
