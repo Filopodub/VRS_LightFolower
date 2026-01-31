@@ -23,7 +23,8 @@ Kód je rozdelený do samostatných modulov:
 - STM32 **NUCLEO-L152RE**
 - 2× **VEML7700 Ambient Light Sensor**    
 - 2× I²C zbernica (I²C1, I²C2)
-- 3.3 V napájanie
+- Servo motor (PWM)
+- 3.3 V a 5 V napájanie
 - Prepojovacie káble
 
 ---
@@ -38,8 +39,6 @@ Kód je rozdelený do samostatných modulov:
 |GND|GND|
 |SCL|PB6 (I²C1_SCL)|
 |SDA|PB7 (I²C1_SDA)|
-|ADDR|GND|
-
 ---
 
 ### VEML7700 – pravý senzor (I²C2)
@@ -50,10 +49,17 @@ Kód je rozdelený do samostatných modulov:
 |GND|GND|
 |SCL|PB10 (I²C2_SCL)|
 |SDA|PB11 (I²C2_SDA)|
-|ADDR|GND|
 
 > Každý senzor má **vlastnú I²C zbernicu**, takže oba môžu používať rovnakú **7-bit adresu 0x10**.  
 > I²C piny sú nakonfigurované ako **AF Open-Drain s Pull-Up**.
+
+### Servo – pravý senzor (PWM)
+
+|SERVO|STM32|
+|---|---|
+|VCC|5 V|
+|GND|GND|
+|PWM|PB4 (TIM3_CH1)|
 
 ---
 
