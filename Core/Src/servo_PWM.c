@@ -2,19 +2,16 @@
   ******************************************************************************
   * @file           : servo_PWM.c
   * @brief          : Futaba S3151 servo control via TIM3_CH1 (PB4)
-  *                   Note: STM32L152RE does not have TIM1, using TIM3 instead
   ******************************************************************************
   */
 
 #include "servo_PWM.h"
 #include "main.h"
 
-/* Private variables */
 TIM_HandleTypeDef htim3;
 static uint8_t current_step = 0;
 static Servo_Direction_t current_direction = SERVO_DIR_FORWARD;
 
-/* Private function prototypes */
 static void MX_TIM3_Init(void);
 static void Servo_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
@@ -25,11 +22,8 @@ static void Servo_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Servo_Init(void)
 {
     MX_TIM3_Init();
-    
-    /* Start PWM */
+ 
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-    
-    /* Set initial position to step 0 */
     Servo_SetPosition(0);
 }
 
@@ -96,7 +90,6 @@ void Servo_StepForward(void)
         current_direction = SERVO_DIR_FORWARD;
         Servo_SetPosition(current_step);
     }
-    /* If at end, do nothing */
 }
 
 /**
@@ -111,7 +104,6 @@ void Servo_StepBackward(void)
         current_direction = SERVO_DIR_BACKWARD;
         Servo_SetPosition(current_step);
     }
-    /* If at start, do nothing */
 }
 
 /**
@@ -124,7 +116,6 @@ static void MX_TIM3_Init(void)
     TIM_MasterConfigTypeDef sMasterConfig = {0};
     TIM_OC_InitTypeDef sConfigOC = {0};
 
-    /* Enable TIM3 clock */
     __HAL_RCC_TIM3_CLK_ENABLE();
 
     htim3.Instance = TIM3;
@@ -154,7 +145,7 @@ static void MX_TIM3_Init(void)
     }
     
     sConfigOC.OCMode = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse = SERVO_PULSE_MIN;  /* Start at minimum position */
+    sConfigOC.Pulse = SERVO_PULSE_MIN;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
     
@@ -175,10 +166,8 @@ static void Servo_TIM_MspPostInit(TIM_HandleTypeDef *htim)
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     
     if (htim->Instance == TIM3) {
-        /* Enable GPIOB clock */
         __HAL_RCC_GPIOB_CLK_ENABLE();
         
-        /* Configure PB4 as TIM3_CH1 (AF2) */
         GPIO_InitStruct.Pin = GPIO_PIN_4;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
