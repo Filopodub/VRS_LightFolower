@@ -35,18 +35,58 @@ int main(void)
   volatile uint16_t id1 = VEML_ReadID(&hi2c1, VEML_ADDR);
   volatile uint16_t id2 = VEML_ReadID(&hi2c2, VEML_ADDR);
 
+  /* Initial scan to find best position */
+  Servo_SetPosition(0);
+  HAL_Delay(500);  
+
+  float matrix[SERVO_STEPS + 1][3];  
+  float maxCombinedLux = 0;
+  uint8_t bestPosition = 0;
+
+  for (int i = 0; i <= SERVO_STEPS; i++) {
+    Servo_SetPosition(i);
+    HAL_Delay(70);  
+
+    lux1 = VEML_ReadLux(&hi2c1, VEML_ADDR);
+    lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);
+
+    matrix[i][0] = lux1;
+    matrix[i][1] = lux2;
+    matrix[i][2] = lux1 + lux2;
+
+    if (matrix[i][2] > maxCombinedLux) {
+      maxCombinedLux = matrix[i][2];
+      bestPosition = i;
+    }
+  }
+
+  Servo_SetPosition(bestPosition);
+  HAL_Delay(500); 
+
+  int currentPosition = bestPosition;
+
+  /* Continuous light follower mode */
   while (1)
   {
-	  raw1 = VEML_ReadRaw(&hi2c1, VEML_ADDR);
-	  lux1 = VEML_ReadLux(&hi2c1, VEML_ADDR);
+    lux1 = VEML_ReadLux(&hi2c1, VEML_ADDR);  // Left sensor
+    lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);  // Right sensor
 
-	  raw2 = VEML_ReadRaw(&hi2c2, VEML_ADDR);
-	  lux2 = VEML_ReadLux(&hi2c2, VEML_ADDR);
+    // If right sensor has 20% more light than left, step forward
+    if (lux2 > lux1 * 1.2f && currentPosition < SERVO_STEPS) {
+      currentPosition++;
+      Servo_SetPosition(currentPosition);
+    }
+    // If left sensor has 20% more light than right, step backward
+    else if (lux1 > lux2 * 1.2f && currentPosition > 0) {
+      currentPosition--;
+      Servo_SetPosition(currentPosition);
+    }
 
-	  Servo_StepForward();
+    HAL_Delay(100);  // Small delay for stability
+    
 
 
-	  HAL_Delay(500);
+    
   }
 
 
